@@ -74,8 +74,8 @@ python main.py --forward_bars 5 --threshold 0.005 --n_features 50
 ```python
 # Initialize the Pipeline
 pipeline = SSLEnsemblePipeline(
-    train_path="datasets/EURUSD_Train.csv",
-    test_path="datasets/GBPUSD_Test.csv",
+    train_path="datasets/Cleaned_Signal_EURUSD_for_training_635_635_60000.csv",
+    test_path="datasets/GBPUSD_H1_20140525_20251021.csv",
     forward_bars=5,
     threshold=0.005,
     n_features=50
@@ -93,7 +93,7 @@ Handles loading of CSV/Excel files and standardizes column names (Open, High, Lo
 
 ### 2. `feature_manager.py`
 
-The "Question Generator". It creates domain-invariant features including:
+It creates domain-invariant features including:
 
 - Log Returns & Momentum (Lags, Cumulative Returns)
 - Oscillators (RSI, Stochastic, Williams %R)
@@ -103,11 +103,11 @@ The "Question Generator". It creates domain-invariant features including:
 
 ### 3. `label_manager.py`
 
-The "Answer Key Generator". It looks into the future (`forward_bars`) to determine if the price will hit the profit `threshold` without hitting a stop-loss (implied by the net return check). Generates labels: `1` (Buy), `-1` (Sell), `0` (Hold).
+It looks into the future (`forward_bars`) to determine if the price will hit the profit `threshold` without hitting a stop-loss (implied by the net return check). Generates labels: `1` (Buy), `-1` (Sell), `0` (Hold).
 
 ### 4. `model_trainer.py`
 
-The core AI engine. It follows a 4-step process:
+It follows a 4-step process:
 
 1.  **Feature Selection**: Uses a Random Forest to identify the most predictive features.
 2.  **SSL (Semi-Supervised Learning)**: Uses `LabelPropagation` to infer labels for a subset of the data, smoothing the decision manifold.
@@ -117,7 +117,7 @@ The core AI engine. It follows a 4-step process:
 ### 5. `evaluator.py` & `strategy_simulator.py`
 
 - **Evaluator**: Calculates technical ML metrics (Accuracy, Precision, Recall, F1-Score) and generates Confidence vs. Accuracy plots.
-- **Simulator**: Converts model predictions into trades. It applies a "Confidence Filter" (e.g., only trade if model confidence > 80%) and runs a full backtest to report Sharpe Ratio, Max Drawdown, and Profit Factor.
+- **Simulator**: Converts model predictions into trades. It applies a "Confidence Filter" (e.g., only trade if model confidence > 55%) and runs a full backtest to report Sharpe Ratio, Max Drawdown, and Profit Factor.
 
 ## License
 
