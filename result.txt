@@ -1,0 +1,170 @@
+================================================================================
+TRADING SIGNAL ML PIPELINE - SSL + ENSEMBLE
+================================================================================
+
+================================================================================
+STEP 1: LOADING DATA
+================================================================================
+
+[1/2] Loading TRAINING data (EURUSD)...
+Reading file: C:\Users\HP\OneDrive\Desktop\Foundation in Computer Programming\FINAL-PROJECTS\datasets\Cleaned_Signal_EURUSD_for_training_635_635_60000.csv
+Data loaded: (61938, 9)
+
+[2/2] Loading TEST data (GBPUSD)...
+Reading file: C:\Users\HP\OneDrive\Desktop\Foundation in Computer Programming\FINAL-PROJECTS\datasets\GBPUSD_H1_20140525_20251021.csv
+Data loaded: (71115, 6)
+
+================================================================================
+STEP 2: FEATURE ENGINEERING & LABEL GENERATION
+================================================================================
+
+[1/2] Processing TRAINING data...
+  Forward bars: 5, Profit threshold: 0.500%
+
+  Creating domain-invariant features...
+  Applying volatility-adjusted normalization...
+  Train volatility: 0.001043, Test volatility: 0.001190, Ratio: 1.14
+
+Training features generated: (61933, 66)
+
+================================================================================
+STEP 3: MODEL TRAINING
+================================================================================
+
+[1/4] Selecting best features...
+
+=== Feature Importance (Top 15) ===
+         feature  importance
+      atr_pct_21    0.077752
+      vol_rel_10    0.066665
+       range_pct    0.059146
+      vol_rel_20    0.049018
+       atr_pct_7    0.035723
+    volume_trend    0.032739
+       vol_rel_5    0.032145
+           vol_5    0.029251
+          vol_20    0.028655
+ bb_width_pct_30    0.025289
+      atr_pct_14    0.022155
+upper_shadow_pct    0.021866
+             adx    0.018164
+    dist_sma_100    0.017581
+ bb_width_pct_20    0.016837
+
+[2/4] Preparing features...
+Features prepared: (61933, 50)
+  Class distribution: Counter({0: 59337, 1: 1302, 2: 1294})
+
+[3/4] Applying Semi-Supervised Learning...
+  Labeled samples: 52669
+  Unlabeled samples: 9264
+  After propagation: Counter({np.int64(0): 59707, np.int64(1): 1115, np.int64(2): 1111})
+
+  Applying SMOTE with aggressive oversampling for BUY/SELL...
+  After SMOTE: Counter({np.int64(0): 47765, np.int64(2): 47765, np.int64(1): 47765})
+
+[4/4] Training Ensemble (LightGBM + XGBoost + RF)...
+
+Validation Accuracy (20% held-out): 91.15%
+
+================================================================================
+TRAINING RESULTS
+================================================================================
+Training Accuracy: 96.74%
+
+Training Classification Report:
+              precision    recall  f1-score   support
+
+    HOLD (0)      0.989     0.978     0.983     59337
+     BUY (1)      0.550     0.724     0.626      1302
+    SELL (2)      0.615     0.742     0.673      1294
+
+    accuracy                          0.967     61933
+   macro avg      0.718     0.815     0.761     61933
+weighted avg      0.972     0.967     0.969     61933
+
+
+Training Confusion Matrix:
+           Pred HOLD  Pred BUY  Pred SELL
+True HOLD      58010       753        574
+True BUY         333       943         26
+True SELL        317        17        960
+
+[4/4] Generating training signal visualization...
+  Training signal plot displayed successfully
+
+================================================================================
+STEP 4: MODEL TESTING (UNSEEN DATA)
+================================================================================
+
+================================================================================
+TESTING RESULTS
+================================================================================
+TEST Accuracy: 90.24%
+
+TEST Classification Report:
+              precision    recall  f1-score   support
+
+    HOLD (0)      0.950     0.952     0.951     67086
+     BUY (1)      0.071     0.074     0.072      1964
+    SELL (2)      0.100     0.089     0.094      2060
+
+    accuracy                          0.902     71110
+   macro avg      0.373     0.371     0.372     71110
+weighted avg      0.901     0.902     0.901     71110
+
+
+TEST Confusion Matrix:
+           Pred HOLD  Pred BUY  Pred SELL
+True HOLD      63839      1779       1468
+True BUY        1639       145        180
+True SELL       1755       122        183
+
+================================================================================
+PER-CLASS PERFORMANCE ANALYSIS
+================================================================================
+HOLD (0): 95.16% accuracy (67086 samples)
+BUY (1): 7.38% accuracy (1964 samples)
+SELL (2): 8.88% accuracy (2060 samples)
+
+================================================================================
+STEP 5: BACKTESTING SIMULATION
+================================================================================
+
+[1/4] Applying smart signal filtering for profitable trading...
+  BUY threshold: 0.55, SELL threshold: 0.55
+  Filtered signals: BUY=704, SELL=580, HOLD=69826
+
+[2/4] Generating test signal visualization (Raw Model Predictions)...
+  -> Displaying Raw Signals Plot (Close Chart)...
+  Test signal plot displayed successfully.
+
+[3/4] Running backtest simulation (Using High-Confidence Signals)...
+  -> Displaying Filtered Signals Plot (Backtesting Signals)...
+  Filtered signal plot displayed successfully.
+
+================================================================================
+BACKTESTING RESULTS
+================================================================================
+  Return [%]......................... 8.5739
+  Win Rate [%]....................... 48.8943
+  Profit Factor...................... 1.0593
+  # Trades........................... 407
+  Sharpe Ratio....................... 0.0973
+  Sortino Ratio...................... 0.1420
+  Max. Drawdown [%].................. -16.6622
+  Avg. Trade [%]..................... 0.0202
+  Best Trade [%]..................... 2.9441
+  Worst Trade [%].................... -1.6030
+
+
+================================================================================
+STEP 6: SAVING MODEL
+================================================================================
+Model artifacts saved to ./models/
+
+================================================================================
+PIPELINE COMPLETED SUCCESSFULLY
+================================================================================
+
+Process finished with exit code 0
