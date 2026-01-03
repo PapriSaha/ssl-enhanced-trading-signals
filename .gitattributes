@@ -1,1 +1,10 @@
 *.pkl filter=lfs diff=lfs merge=lfs -text
+
+
+*.html linguist-vendored
+*.js linguist-vendored
+*.json linguist-vendored
+*.css linguist-vendored
+public/* linguist-vendored
+scot-ui/public/* linguist-vendored
+*.py linguist-language=Python
