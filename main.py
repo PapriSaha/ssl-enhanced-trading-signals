@@ -24,7 +24,7 @@ class SSLEnsemblePipeline:
     coordinate all the specialized modules into a coherent pipeline (Load -> Feature -> Label -> Train -> Test -> Save).
     """
 
-    def __init__(self, train_path, test_path, forward_bars=5, threshold=0.005, n_features=50):
+    def __init__(self, train_path, test_path, forward_bars=5, threshold=0.004, n_features=50):
         # Store configuration parameters
         self.train_path = train_path
         self.test_path = test_path
@@ -162,7 +162,7 @@ if __name__ == "__main__":
     # Parse arguments from command line
     parser = argparse.ArgumentParser()
     parser.add_argument("--forward_bars", type=int, default=5, help="Candles to look ahead for target")
-    parser.add_argument("--threshold", type=float, default=0.005, help="Minimum return to classify as Buy/Sell")
+    parser.add_argument("--threshold", type=float, default=0.004, help="Minimum return to classify as Buy/Sell")
     parser.add_argument("--n_features", type=int, default=50, help="Number of top features to select")
     args = parser.parse_args()
 
